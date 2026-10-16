@@ -1,0 +1,8 @@
+{
+    "name": "H3 Character Swap",
+    "author": "Jedsdeadbaby",
+    "version": "0.1",
+    "description": "Character Swap LoRA recipe in the main page: the control video as <Video 1> in masked video-to-video, and a prompt builder.",
+    "date": "2026-10-16",
+    "wan2gp_version": ""
+}
