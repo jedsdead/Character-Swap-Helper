@@ -1,6 +1,7 @@
 """H3 Character Swap: an inline section of the main generation page for MiniMax H3 Ref2VA models.
 
-It only adds what the normal generator can't provide for the Character Swap LoRA's recipe:
+It only adds what the normal generator can't provide for the recipe of character swap LoRAs (Akatz Labs' Character Swap
+LoRA and others trained the same way):
 * a switch that gives the control video to H3 as reference <Video 1> during masked video-to-video (see swap_hook);
 * a prompt builder in the wording of the LoRA's model card or of its author's tool.
 """
@@ -18,11 +19,11 @@ REF2VA_ARCHITECTURES = ("minimax_h3_ref2va_pruned", "minimax_h3_ref2va")
 INSERT_TARGETS = ("mask_expand", "video_mask", "guidance_phases_row")  # first one found in the page
 
 SETUP = """**Character Swap recipe** (the LoRA author's tool), in the settings above and below:
-- **Reference Images:** the character image (it is `<Picture 1>`)
+- **Reference Images:** the character image (it is `<Picture 1>`), or a picture RefMod of the character
 - **Reference / Control Video:** *Denoise Control Video (Video-to-Video Edit)* with your clip
 - **Video Mask:** the person to replace, white, *masked area* regenerated (Magic Mask with `person`, or MatAnyone); **Mask Expand** about 44 (≈ 64 px)
 - **Audio:** *Generate Video based on Reference / Control Video + its Audio Track (Soundtrack Kept)*
-- **LoRA:** the Character Swap LoRA (V1.5) at 1.0, with 1 guidance phase
+- **LoRA:** your swap LoRA (Character Swap V1.5 at 1.0; for another LoRA, its own strength and trigger word), with 1 guidance phase
 - Mask Denoising Mode: *Grouped Rows* (the default). Up to about 15 s, one window."""
 
 
@@ -57,8 +58,8 @@ class H3CharacterSwapPlugin(WAN2GPPlugin):
     def __init__(self):
         super().__init__()
         self.name = "H3 Character Swap"
-        self.version = "0.1"
-        self.description = "Character Swap LoRA recipe in the main page: the control video as <Video 1> in masked video-to-video, and a prompt builder."
+        self.version = "0.2"
+        self.description = "Character swap LoRA recipe in the main page: the control video as <Video 1> in masked video-to-video, and a prompt builder."
         self._ui_built = False
         settings.load()
 
@@ -98,7 +99,7 @@ class H3CharacterSwapPlugin(WAN2GPPlugin):
                               elem_id="h3_character_swap_section") as section:
                 enabled = gr.Checkbox(value=settings.get()["enabled"],
                                       label="Character Swap: also give the control video to H3 as <Video 1>",
-                                      info="With Denoise Control Video, a Video Mask and the character as Reference Image, the untouched "
+                                      info="With Denoise Control Video, a Video Mask and the character as Reference Image (or a RefMod), the untouched "
                                            "clip is shown to H3 as <Video 1> so the regenerated person follows the original performance. "
                                            "Read when each generation starts; switch it off for other masked edits.")
                 gr.Markdown(SETUP)
